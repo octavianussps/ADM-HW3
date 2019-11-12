@@ -1,95 +1,93 @@
-
 from bs4 import BeautifulSoup
 import requests
-from collector_utils import PLOT, INTRO, DICT_INFOBOX, EMPTY_INFOBOX
 import time
-import pandas as pd
-import numpy as np
-import csv
+import urllib.request, urllib.error, urllib.parse
+import os.path
+from collector_utils import PRINT
 
 #ConnectionError
 
+# where we want save all the html files
+save_path = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/HTML'
 
 
+# counter for the name of the file
+counter = 19994
 
-# We are reading the HTML with all the page of wikipedia
-list_of_pages = 'https://raw.githubusercontent.com/CriMenghini/ADM/master/2019/Homework_3/data/movies1.html'
-request = requests.get(list_of_pages )
-
-
-# we parse 
-soup = BeautifulSoup(request.text, 'html.parser')
-
-# we create a list with all the links
-wiki_links = soup.select('a')
-#print(len(wiki_links))
-#print(cane(15))
-
-
-possible_plots = ['#Plot','#Plot_summary', '#Premise']
-                 
-infos = ['title', 'intro', 'plot' ,'film_name', 'director', 'producer', 'writer', 'starring', 'music', 'release date', 'runtime', 'country', 'language', 'budget']
-Name = ['Directed by', 'Produced by', 'Written by', 'Starring', 'Music by', 'Release date', 'Running time', 'Country', 'Language', 'Budget']
-
-
-#print(wiki_links[:9])
-N = 150
-i = 0
-while i < N:#len(wiki_links):
-    print(i,str(i))
-#for link in wiki_links[N: N + 10]:
+# A loop for each list of link
+for i in range(3,4):
     
-    # open the wiki page
-    link_i = requests.get(wiki_links[i].get('href'))
-    soup_i = BeautifulSoup(link_i.content, 'html5lib')
+    # We are reading the HTML with all the links for the pages of wikipedia
+    list_of_pages = 'https://raw.githubusercontent.com/CriMenghini/ADM/master/2019/Homework_3/data/movies' + str(i) + '.html'               
+    request = requests.get(list_of_pages )
     
-    # read all the paragraph
-    all_p_i = soup_i.find_all('p')
     
-    # select inside <span> the tag Plot everything inside <h2> 
-    #print(wiki_links[i].get('href'))
-    no_plot = 0
-    for k in possible_plots:
+    # we parse this file 
+    soup = BeautifulSoup(request.text, 'html.parser')
+    
+    # we create a list with all the links
+    wiki_links = soup.select('a')
+    
+    N = len(wiki_links)
+    for j in range(0,N):
         try:
-            tag_i = soup_i.select_one(k).find_parent('h2').find_next_sibling()
-            plot = PLOT(tag_i, [])
-            no_plot = 1
-            break                         
+            print(i,j,counter)
+            # read the j-th page of wikipedia in the i-th HTML page of all links
+            response = urllib.request.urlopen(wiki_links[j].get('href'))
+            webContent = response.read()
+            
+            # this function save this page in an .html file inside the folder at the address save_path 
+            PRINT(save_path, counter, webContent)
+            counter += 1
+        #except 'error409':
+        #    time.sleep(1200)
         except:
             pass
-    if no_plot == 0:
-        plot = 'NA' 
-            
-    intro = INTRO(all_p_i,plot[0],[])    
+        time.sleep(0.01)
+
+
+
+'''
+
+import urllib.request
+ 
+url= 'https://asd.com/asdID='
+for i in range(1, 5):
+    print('     --> ID:', i)
+    newurl = url + str(i)
+    f = open(str(i)+'.html', 'w')
+    page = urllib.request.urlopen(wiki_links[i].get('href'))
+    pagetext = str(page.read())
+    f.write(pagetext)
+    f.close()
     
-    try: 
-        table = soup_i.find('table', class_='infobox vevent')
-        result = DICT_INFOBOX(soup_i,{})
-    except:
-        result = EMPTY_INFOBOX()
     
     
     
-    InfoBox = [0]*14
     
-    for k in range(10):
-        InfoBox[k+4] = result.get(Name[k], 'NA')
-    
-    InfoBox[0] = soup_i.title.text[:-12]
-    try:
-        InfoBox[3] = table.find_all('tr')[0].text
-    except:
-        InfoBox[3] = ['NA']
-    InfoBox[2] = ' '.join(plot)
-    InfoBox[1] = ' '.join(intro)
-    
-    with open('./TSV/article_' + str(i) + '.tsv', 'wt') as out_file:
-        tsv_writer = csv.writer(out_file, delimiter='\t')
-        tsv_writer.writerow(InfoBox)
-        
-    
-    time.sleep(np.random.randint(1, 6))
-    i += 1
+#fid=urllib.request.urlopen(link_i)
+fid = urllib.request.urlopen(wiki_links[i].get('href'))
+fi = fid.read()
+webpage=fid.read().decode('utf-8')
+
+
+
+save_path = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/HTML'
+
+name_of_file = 'article_' + str(i) + '.html'
+
+completeName = os.path.join(save_path, name_of_file)
+with open(completeName, 'w') as out_file:
+    out_file.write('please')
+
+
+'''
+
+
+
+
+
+
 
 
 
