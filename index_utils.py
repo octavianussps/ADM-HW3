@@ -21,20 +21,25 @@ def FILTER(string):
     return ListOfWords
 
 
-def DOC_DOCLEN_FREQ(Document, Vocabolary, i):
+def DOC_DOCLEN_FREQ(Document, direct_index, i):
     Length = len(Document)
     Document = Counter(Document)
     for word, frequence in Document.items():
-        if word not in Vocabolary:
-            Vocabolary[word] = [('doc_'+str(i), Length, frequence)]
+        if word not in direct_index:
+            direct_index[word] = [(i, Length, frequence)]
         else:
-            Vocabolary[word].append(('doc_'+str(i), Length, frequence))
+            direct_index[word].append((i, Length, frequence))
     return 
 
-def INVERTED_INDEX(Vocabolary, Inverted_index, N):
-    for key, Items in Vocabolary.items():
+def INVERTED_INDEX(direct_index, Inverted_index, N):
+    for key, Items in direct_index.items():
         Inverted_index[key] = []
         for item in Items:
             Inverted_index[key].append((item[0], (item[2]/item[1])*np.log(N/len(Items))))
     return 
 
+
+
+
+
+# text = text.replace("'", "")
