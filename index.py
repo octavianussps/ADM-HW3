@@ -1,40 +1,69 @@
 
 import os.path
-from index_utils import FILTER, DOC_DOCLEN_FREQ, INVERTED_INDEX
-from collections import Counter
-import numpy as np
-import os.path
-from collector_utils import PRINT
-import json
+from index_utils import FILTER, DOC_DOCLEN_FREQ_DIC, INVERTED_INDEX_DIC
 import pickle
 
+
+
+# we read the tsv files from the folder TSV 
 output_path = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/TSV'
+
+
+## there are dictionary of dictionary because is easy to read
+'''
+{ word_id : {doc_id : tfidf,
+             doc_id : tfidf,
+             doc_id : tfidf }, 
+  word _id: {doc_id : tfidf,
+             doc_id : tfidf,
+             doc_id : tfidf,
+             doc_id : tfidf}
+  }
+'''
+
+# is a dictionry with as key the word and as value another dictionary with key the number of the document and as value the frequency of the word in this document
 direct_index = {}
+
+#the inverted index with as key the words
 Inverted_index_words = {}
+
+#the inverted index with as key the words_number read from the Vocabulary
 Inverted_index = {}
+
+# as key the word as value the number
 Vocabulary = {}
 
-N = 29982
+# as key the number of the document as value his length after cleaning
+Length_Doc = {}
+
+N = 30000
 i = 0
-while i < N:#len(wiki_links):
-    print(i,str(i))
+while i < N:
+    
+    # read the i-th tsv
     completeName_output = os.path.join(output_path, 'article_' + str(i) + '.tsv')
     with open(completeName_output, 'r') as input_file:
         intro_plot = input_file.readline()
+    # select only the intro and the plot
     intro_plot = intro_plot.split('\t')[1:3]
+    # make a string
     intro_plot = str(intro_plot[0]) + ' ' + str(intro_plot[1])
-    
+    # filter this string
     Document = FILTER(intro_plot)
+    # save the length of the document
+    Length_Doc[i] = len(Document) 
     
-        
-    DOC_DOCLEN_FREQ(Document, direct_index, i)
+    # make the direct index
+    DOC_DOCLEN_FREQ_DIC(Document, direct_index, i)
     
     
     
     i += 1
-        
-INVERTED_INDEX(direct_index, Inverted_index_words, N)
 
+# save the inverted index with the words as key
+INVERTED_INDEX_DIC(direct_index, Inverted_index_words, Length_Doc, N)
+
+# create the Vocabulary and the real inverted index
 counter = 0
 for i,j in Inverted_index_words.items():
     Vocabulary[i] = counter
@@ -42,28 +71,14 @@ for i,j in Inverted_index_words.items():
     counter += 1
 
     
-file = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/Inverted_index'
+file = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/'
 
+# save the 3 dictionary as pkl
+with open(file+'Inverted_index.pkl', 'wb') as fp:
+    pickle.dump(Inverted_index, fp, protocol = pickle.HIGHEST_PROTOCOL)
+    
+with open(file+'Vocabulary.pkl', 'wb') as fp:
+    pickle.dump(Vocabulary, fp, protocol = pickle.HIGHEST_PROTOCOL)
 
-
-with open(file+'.json', 'w') as fp:
-    json.dump(Inverted_index, fp)
-
-with open(file+'.json', 'r') as fp:
-    da = json.load(fp)
-
-
-with open(file+'.pkl', 'wb') as fp:
-    pickle.dump(da, fp, protocol = pickle.HIGHEST_PROTOCOL)
-
-with open(file+'.pkl', 'r') as fp:
-    dat = pickle.load(fp)
-
-with open(file + '.txt', 'w') as fp:
-    fp.write(str(da))
-
-import sys
-
-
-
-
+with open(file+'Length_doc.pkl', 'wb') as fp:
+    pickle.dump(Length_Doc, fp, protocol = pickle.HIGHEST_PROTOCOL)
