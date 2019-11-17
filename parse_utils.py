@@ -25,7 +25,7 @@ def INTRO(all_p_i,plot,intro):
     #select all the paragraph writen after the plot
     else:
         for par in all_p_i:
-            if par.text[:-2] == plot:
+            if par.text[:-2].replace('\n', '') == plot[0]:
                 break
             else:
                 intro.append(par.text.replace('\n', ''))

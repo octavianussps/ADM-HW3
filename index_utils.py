@@ -37,14 +37,14 @@ def DOC_DOCLEN_FREQ_DIC(Document, direct_index, i):
     return 
 
 # we use this function to create the inverted index 
-def INVERTED_INDEX_DIC(direct_index, Inverted_index, Length_Doc, N):
+def INVERTED_INDEX_DIC(direct_index, Inverted_index, Length_Doc, Number_of_documents):
     for key, Doc_Freq in direct_index.items():
         Inverted_index[key] = {}
         for doc, freq in Doc_Freq.items():
             if key not in Inverted_index:
-                Inverted_index[key] = {doc: (freq/ Length_Doc[doc])*np.log(N/len(Doc_Freq))}
+                Inverted_index[key] = {doc: (freq/ Length_Doc[doc])*np.log10(Number_of_documents/len(Doc_Freq))}
             else:
-                Inverted_index[key][doc] = (freq/ Length_Doc[doc])*np.log(N/len(Doc_Freq))
+                Inverted_index[key][doc] = (freq/ Length_Doc[doc])*np.log10(Number_of_documents/len(Doc_Freq))
     
     return 
 

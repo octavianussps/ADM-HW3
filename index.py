@@ -6,7 +6,7 @@ import pickle
 
 
 # we read the tsv files from the folder TSV 
-output_path = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/TSV'
+input_path = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/TSV'
 
 
 ## there are dictionary of dictionary because is easy to read
@@ -36,13 +36,16 @@ Vocabulary = {}
 # as key the number of the document as value his length after cleaning
 Length_Doc = {}
 
+# 30000 - number of empty docs
+Number_of_documents = 29982
+
 N = 30000
 i = 0
 while i < N:
-    
+    print(i)
     # read the i-th tsv
-    completeName_output = os.path.join(output_path, 'article_' + str(i) + '.tsv')
-    with open(completeName_output, 'r') as input_file:
+    completeName_input = os.path.join(input_path, 'article_' + str(i) + '.tsv')
+    with open(completeName_input, 'r') as input_file:
         intro_plot = input_file.readline()
     # select only the intro and the plot
     intro_plot = intro_plot.split('\t')[1:3]
@@ -61,7 +64,7 @@ while i < N:
     i += 1
 
 # save the inverted index with the words as key
-INVERTED_INDEX_DIC(direct_index, Inverted_index_words, Length_Doc, N)
+INVERTED_INDEX_DIC(direct_index, Inverted_index_words, Length_Doc, Number_of_documents)
 
 # create the Vocabulary and the real inverted index
 counter = 0
@@ -70,10 +73,15 @@ for i,j in Inverted_index_words.items():
     Inverted_index[counter] = j
     counter += 1
 
+
+c = []
+
+for i in  Inverted_index_words:
+    c.append(i)
     
 file = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/'
 
-# save the 3 dictionary as pkl
+# save the 3 dictionaries as pkl
 with open(file+'Inverted_index.pkl', 'wb') as fp:
     pickle.dump(Inverted_index, fp, protocol = pickle.HIGHEST_PROTOCOL)
     

@@ -28,9 +28,8 @@ b = []
 N = 30000
 i = 0
 
-
 while i < N:
-    
+    print(i)
     # select the html file
     completeName_input = os.path.join(input_path, 'article_' + str(i) + '.html')
     try:
@@ -60,7 +59,7 @@ while i < N:
                 pass
         # if there is no plot we write 'NA'
         if no_plot == 0:
-            plot.append('NA')
+            plot = 'NA'
         
         # reading the intro: everything before the plot
         intro = INTRO(all_p_i,plot,[])    
@@ -96,9 +95,11 @@ while i < N:
         
         # save the tsv file
         completeName_output = os.path.join(output_path, 'article_' + str(i) + '.tsv')
+        
         with open(completeName_output, 'wt') as out_file:
             tsv_writer = csv.writer(out_file, delimiter='\t')
             tsv_writer.writerow(InfoFilm)
+        
     except:
         # if the html in empty, this mean that in collector there was the exception 404 so we save only 'NA' for each informations
         InfoFilm = ['NA']*14
@@ -106,10 +107,11 @@ while i < N:
         with open(completeName_output, 'wt') as out_file:
             tsv_writer = csv.writer(out_file, delimiter='\t')
             tsv_writer.writerow(InfoFilm)
+        
         b.append(i)
 
     
-        i += 1
+    i += 1
 
 
 

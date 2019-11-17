@@ -4,6 +4,7 @@ import time
 import urllib.request, urllib.error, urllib.parse
 from collector_utils import PRINT
 import numpy as np
+import pickle
 
 # where we want save all the html files
 save_path = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/'
@@ -15,7 +16,8 @@ counter = 0
 # a list of all the empty pages
 empty_file = []
 
-
+# a dictionary with as key the Id of the document and walue his url
+Doc_Id_url = {}
 
 # A loop for each list of link
 for i in range(1,4):
@@ -33,6 +35,9 @@ for i in range(1,4):
     
     N = len(wiki_links)
     for j in range(0,N):
+        # save the url and the link
+        Doc_Id_url[counter] = wiki_links[j].get('href')
+        
         try:
             print(i,j,counter)
             
@@ -62,3 +67,9 @@ for i in range(1,4):
         # andom time sleep between 1 and 5 sec
         time.sleep(np.random.randint(1,6))
         
+
+file = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/'
+
+# save the dictionary as pkl
+with open(file+'Doc_Id_url.pkl', 'wb') as fp:
+    pickle.dump(Doc_Id_url, fp, protocol = pickle.HIGHEST_PROTOCOL)
