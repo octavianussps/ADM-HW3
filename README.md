@@ -53,14 +53,19 @@ The above information is availble in INDEX.py and INDEX_UTILS.py files in reposi
 
 #### Conjunctive Query
 
-Create a dictionary with links and number in Collector.py
-
-Generate a dataframe
-
-re-upload index and index_utils collector pars
+For the conjunctive query we see only the number of documents in the Inverted_index dictionary, save for each word a vector with these numbers and after matking the AND of these vectors
 
 The above information is coded in the main.py available in repository.
 
+
+#### Our Score
+
+The user can also decide the number of links to see, he can also specify the director and the composer.
+
+The score is based on the word frequency in documents that contain all the words in the query. 
+The score is the mean of the frequencies.
+
+If the composer or director matches whit the choose of the user, the score of the document will be increased by 25%.
 
 ## Algorithm for Longest Palandromic Subsequence
 
