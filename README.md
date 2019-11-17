@@ -58,6 +58,10 @@ For the conjunctive query we see only the number of documents in the Inverted_in
 The above information is coded in the main.py available in repository.
 
 
+### Cosine similarity
+
+we calculated the tfidf for the query and executed the cosine similary with the documents obtained from the conjuntive query.
+
 #### Our Score
 
 The user can also decide the number of links to see, he can also specify the director and the composer.
