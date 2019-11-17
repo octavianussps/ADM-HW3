@@ -227,7 +227,7 @@ def heapSort(arr):
 
 ######################################## Start the code
 
-'''
+
 # folder with the tsv files
 input_path = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/TSV'
 
@@ -247,7 +247,7 @@ for word_id,doc_id_tfidf in Inverted_index.items():
     for doc_id, tfidf in doc_id_tfidf.items():
         Length[doc_id][0].append(word_id)
         Length[doc_id][1].append(tfidf)
-'''
+
 
 
 # input for the user
