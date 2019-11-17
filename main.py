@@ -6,6 +6,8 @@ import pickle
 from functools import reduce
 import pandas as pd
 import os.path
+import numpy as np
+from collections import Counter
 
 
 ######################################## Search engine 1
@@ -54,6 +56,32 @@ def output_conjuntive_query(Films, input_path, Doc_Id_url):
 ######################################## Search engine 2
     
 
+def output_second_score(Films, input_path, Score, Doc_Id_url, Film_Score):
+    Title = []
+    Intro = []
+    Url = []
+    Score_cosin = []
+    # for each film selected we are going to save title, intro and url
+    for i in range(len(Films)-1,-1,-1):
+        completeName_input = os.path.join(input_path, 'article_' + str(Film_Score[Score[i]]) + '.tsv')
+        with open(completeName_input, 'r') as input_file:
+            document = input_file.readline()
+        document= document.split('\t')
+        Title.append(document[0])
+        Intro.append(document[1])
+        Url.append(Doc_Id_url[Film_score[Score[i]]])
+        Score_cosin.append(Score[i])
+    #create a dictionary
+    Data = {'title' : Title,
+            'intro' : Intro,
+            'url' : Url,
+            'score' : Score_cosin
+            }
+   
+    # make the dataframe 
+    df = pd.DataFrame(data=Data)
+    
+    return df
 
 
 
@@ -199,7 +227,7 @@ def heapSort(arr):
 
 ######################################## Start the code
 
-
+'''
 # folder with the tsv files
 input_path = '/home/lex/Desktop/Data_science/Algorithmic_Methods_of_Data_Mining/ADM_hw3/TSV'
 
@@ -214,11 +242,12 @@ with open(file + 'Vocabulary.pkl', 'rb') as fp:
 with open(file + 'Doc_Id_url.pkl', 'rb') as fp:
     Doc_Id_url = pickle.load(fp)
 
-Length = {doc_id :[] for doc_id in range(30000) }
+Length = {doc_id :[[],[]] for doc_id in range(30000) }
 for word_id,doc_id_tfidf in Inverted_index.items():
     for doc_id, tfidf in doc_id_tfidf.items():
-        Length[doc_id].append(tfidf)
-
+        Length[doc_id][0].append(word_id)
+        Length[doc_id][1].append(tfidf)
+'''
 
 
 # input for the user
@@ -268,7 +297,44 @@ if Choice == 1:
 
 if Choice == 2:
     
+    # evaluating the tfidf for the query
+    Query_counter = Counter(Query)
+    Query_tfidf = {}
+    for k,v in Query_counter.items():
+        Query_tfidf[Vocabulary[k]] = (v/ len(Query))*np.log10((29982/len(Inverted_index[Vocabulary[k]]))+1)
+    
+    # use the conjuntive query
+    Films = conjuntive_query(Query, Inverted_index, Vocabulary, Docs)
+    if len(Films) == 0:
+        print('Sorry but there is nothing for you, try again')
+    else:
+        #set the score for each film
+        Score = []
+        for i in range(len(Films)):
+            # numerator and denominator
+            Numerator = 0
+            denominator = np.linalg.norm(Length[Films[i]][1])*np.linalg.norm(np.fromiter(Query_tfidf.values(), dtype = float))
+            # dot product using Lenght dictionary 
+            for j in range(len(Query)):
+                if Vocabulary[Query[j]] in Length[Films[i]][0]:
+                    Numerator += Query_tfidf[Vocabulary[Query[j]]]*Length[Films[i]][1][j]
+            # evaluating the score
+            Score.append(Numerator/denominator)
+    
+        Film_Score = dict(zip(Score, Films))
+        
+        # sort with the heap map
+        heapSort(Score) 
+        
+        # save the dataframe
+        df = output_second_score(Films, input_path, Score, Doc_Id_url, Film_Score)
+        print(df)
+    
 
+
+
+
+    
 if Choice == 3:
     # we star from the conjuntive query
     Films = conjuntive_query(Query, Inverted_index, Vocabulary, Docs)
