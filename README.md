@@ -49,9 +49,42 @@ by using above function created 3 dictionaries INVERTED_INDEX.pkl | VOCABLUARY.p
 
 The above information is availble in INDEX.py and INDEX_UTILS.py files in repository
 
+## Search Engine - Query Executing
+
+#### Conjunctive Query
+
+Create a dictionary with links and number in Collector.py
+
+Generate a dataframe
+
+re-upload index and index_utils collector pars
+
+The above information is coded in the main.py available in repository.
 
 
+## Algorithm for Longest Palandromic Subsequence
 
+### Answer: 
+
+The Idea that is referred in this question is of the longest palindromic subsequence. I am defining this algorithm with the dynamic programming approach which is defined as dividing a problem into sub-problems, then solving these sub-problems in a way to store their results in a structure dataset for future query.
+First of all understand the problem, let’s suppose the sequence is “anwaralam” and its length is 9 and index 0-8. So,
+
+1.	First part is to identify the subsequences of this sequence, which can be defined as the sub-problem of the main - - problem.
+
+2.	Then second part is to identify their palindromic nature from first and last element of the subsequence and store the result in a data structure, (data structure is defined as a 2 dimensional table DST in our case)
+
+3.	Thirdly to identify the longest Palindromic Subsequence from the data structure of stored result.
+
+Detail Answer with algorithm Explataion is available in Answer_Algorithm_Question4.md and Coding is available in exercie4.py
+
+<p align="left">
+<img src="https://github.com/anwaralamgithub/ADM2019HW3_Movies_Search_Engine/blob/images/FIG5.jpg" height=430 
+</p>
+
+________________________________________________________________________________________________________________________
+<p align="left">
+<img src="https://github.com/anwaralamgithub/ADM2019HW3_Movies_Search_Engine/blob/images/FIG6.jpg" height=430 
+</p>
 
 
 
