@@ -37,6 +37,22 @@ The above explanation is linked with the files PARSER.py and PARSER_UTILS.py ava
 
 ## Indexing/Invert Indexing
 
+firstly cleaning of data with nltk library
+
+Created Direct Index- Dictionary where WORD is a KEY, and value is the another dictionary with a key NUMBER OF DOCUMENT and Value THE FREQUENCY OF WORD in this Document
+
+Created INVERTED index for the same
+
+Combining all these function in INDEX_UTILS.py available in Repository
+
+by using above function created 3 dictionaries INVERTED_INDEX.pkl | VOCABLUARY.pkl | LENGTH_DOC.pkl
+
+The above information is availble in INDEX.py and INDEX_UTILS.py files in repository
+
+
+
+
+
 
 
 
